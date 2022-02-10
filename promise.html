@@ -1,0 +1,57 @@
+<script>
+    function timer(time){
+        return new Promise(function(resolve){
+            setTimeout(function(){
+                resolve(time);
+            }, time);
+        });
+    }
+    // console.time('timer'); //스탑워치 시작
+    // timer(1000).then(function(time){
+    //     console.log('time:' + time);
+    // });
+    //     timer(time+1000).then(function(time){
+    //         console.log('time:' + time);
+    //     });
+    //         timer(time+1000).then(function(time){
+    //             console.timeEnd('timer'); //스탑워치 끝 6초 걸림(동기)
+    //             console.log('time:' + time);
+    //         });
+
+
+    /*
+    console.time('timer');
+    timer(1000) // 1초후에
+    .then(function(time){ 
+        console.log('time:'+time) // 작업 수행
+        return timer(time+1000); // 2초 후에
+    })
+    .then(function(time){
+        console.log('time:'+time) // 작업 수행
+        return timer(time+1000); // 3초 후에
+    })
+    .then(function(time){
+        console.log('time:'+time) // 작업 수행
+        console.timeEnd('timer')
+    });
+*/
+    async function run(){
+        console.time('timer');
+        let time = await timer(1000); // (async/await 없을 때)내부적으로 실제로 1초를 기다리지만 then을 안썻기 때문에 끝나는 시점을 몰라 아무 일도 일어나지 않음
+        console.log('time:'+time); // await을 사용하면 비동기적으로 동작하는 것은 똑같지만 동기적인 코드처럼 코딩할 수 있게됨
+        time = await timer(time+1000);
+        console.log('time:'+time);
+        time = await timer(time+1000);
+        console.log('time:'+time);
+        console.timeEnd('timer'); 
+    }
+    async function run2(){ // async를 함수 앞에 쓰면 그 함수는 promise를 리턴
+        console.log('start');
+        await run();
+        console.log('end');
+    }
+    console.log('parent start');
+    run2().then(function(){ // run2는 start -> run -> ed
+        console.log('parent end')
+    }); 
+</script>
